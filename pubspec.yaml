@@ -1,4 +1,4 @@
-name: pizza_no_grau_app
+name: pizza_no_grau_app 
 description: "A new Flutter project."
 
 publish_to: 'none' 
@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_native_splash: ^2.0.7
 
 dev_dependencies:
   flutter_test:
@@ -22,4 +22,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-  - lib/assets/images/Logo.png
+    - lib/assets/images/Logo.png
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "lib/assets/images/Logo.png"
+  android: true
+  ios: true
