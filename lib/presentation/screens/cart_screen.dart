@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_no_grau_app/presentation/themes/my_colors.dart';
+import 'order_history_screen.dart'; // Importando a tela de histórico
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CartScreen extends StatefulWidget {
@@ -10,7 +11,6 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   final TextEditingController addressController = TextEditingController();
 
-  // A lista de itens no carrinho agora tem tipos explícitos para garantir que os dados sejam consistentes.
   final List<Map<String, dynamic>> cartItems = [
     {"product": "Pizza Marguerita - Tamanho G", "quantity": 1, "price": 68.00}
   ];
@@ -26,19 +26,15 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void calculateTotal() {
-    // Garantindo que o cálculo do total seja feito de forma correta.
     totalAmount = cartItems.fold(0.0, (double sum, Map<String, dynamic> item) {
-          double price = item['price'] ??
-              0.0; // Garantir que o valor do preço seja um double
-          int quantity =
-              item['quantity'] ?? 0; // Garantir que a quantidade seja um int
-          return sum + (price * quantity); // Cálculo correto com tipos seguros
+          double price = item['price'] ?? 0.0;
+          int quantity = item['quantity'] ?? 0;
+          return sum + (price * quantity);
         }) +
         deliveryFee -
         discount;
   }
 
-  // Função para adicionar produto ao carrinho
   void addProductToCart() {
     setState(() {
       cartItems.add({
@@ -192,6 +188,30 @@ class _CartScreenState extends State<CartScreen> {
                   onPressed: addProductToCart,
                   backgroundColor: MyColors.redPrimary,
                   child: Icon(Icons.add, color: MyColors.background),
+                ),
+              ),
+
+              // Botão para redirecionar para o histórico de pedidos
+              SizedBox(height: 20), // Espaçamento
+              ElevatedButton(
+                onPressed: () {
+                  // Redireciona para a tela de histórico de pedidos
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OrderHistoryScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: MyColors.redPrimary,
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  minimumSize: Size(double.infinity, 50),
+                ),
+                child: Text(
+                  'VIR PARA HISTÓRICO DE PEDIDOS',
+                  style: TextStyle(color: MyColors.background),
                 ),
               ),
             ],
