@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../themes/my_colors.dart';
+import 'login_screen.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -46,7 +47,13 @@ class HomeScreen extends StatelessWidget {
               Container(
                 width: buttonWidth, // Largura responsiva para o botão
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Navegando para a tela de login
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: MyColors.redPrimary,
                     padding: EdgeInsets.symmetric(vertical: 16),
