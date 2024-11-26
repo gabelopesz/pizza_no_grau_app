@@ -2,9 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../themes/my_colors.dart';
+import '../widgets/bottom_navigation_bar.dart'; // Importando o CustomBottomNavigationBar
 
-class MenuScreen extends StatelessWidget {
+class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
+
+  @override
+  _MenuScreenState createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
+  int _selectedIndex = 0; // Índice da navegação
+
+  // Função de navegação quando um item do bottom bar é clicado
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    // Redirecionamento de acordo com o item clicado
+    if (index == 0) {
+      // Manter na mesma tela (MenuScreen)
+    } else if (index == 1) {
+      // Navegar para a tela de Carrinho
+      Navigator.pushNamed(context, '/cart');
+    } else if (index == 2) {
+      // Navegar para a tela de Histórico de Pedidos
+      Navigator.pushNamed(context, '/order-history');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,18 +90,10 @@ class MenuScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFFE9524D),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart), label: 'Carrinho'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Configurações'),
-        ],
+      bottomNavigationBar: CustomBottomNavigationBar(
+        // Usando o BottomNavigationBar aqui
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
@@ -92,14 +110,14 @@ class MenuScreen extends StatelessWidget {
           image: DecorationImage(
             image: AssetImage(imagePath),
             fit: BoxFit
-                .contain, // Garante que a imagem seja exibida completamente sem corte
+                .cover, // Garantir que a imagem seja exibida completamente
           ),
         ),
       ),
     );
   }
 
-  // Carousel Widget - Ajustando as imagens para 136x140 e exibindo mais de uma imagem por página
+  // Carousel Widget - Substituindo imagens por ícones e exibindo mais de uma imagem por página
   Widget _buildCarousel(List<Map<String, String>> items, IconData icon) {
     return CarouselSlider(
       options: CarouselOptions(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_no_grau_app/presentation/themes/my_colors.dart';
-import 'order_history_screen.dart'; // Importando a tela de histórico
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'order_history_screen.dart'; // Importando a tela de histórico
+import '../widgets/bottom_navigation_bar.dart'; // Importando o widget do BottomNavigationBar
 
 class CartScreen extends StatefulWidget {
   @override
@@ -9,6 +10,8 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  int _selectedIndex = 1; // Define o índice inicial como Carrinho
+
   final TextEditingController addressController = TextEditingController();
 
   final List<Map<String, dynamic>> cartItems = [
@@ -46,10 +49,23 @@ class _CartScreenState extends State<CartScreen> {
     });
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    // Navegação entre as telas
+    if (index == 0) {
+      Navigator.pushReplacementNamed(context, '/menu');
+    } else if (index == 1) {
+      // Ficar na mesma tela (Carrinho)
+    } else if (index == 2) {
+      Navigator.pushReplacementNamed(context, '/order-history');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: MyColors.background,
       appBar: AppBar(
@@ -99,7 +115,7 @@ class _CartScreenState extends State<CartScreen> {
                           CircleAvatar(
                             radius: 30,
                             backgroundImage: AssetImage(
-                                'lib/assets/images/Pizza_marguerita.png'), // Imagem do produto
+                                'lib/assets/images/Pizza_marguerita.png'),
                           ),
                           SizedBox(width: 10),
                           Column(
@@ -192,7 +208,7 @@ class _CartScreenState extends State<CartScreen> {
               ),
 
               // Botão para redirecionar para o histórico de pedidos
-              SizedBox(height: 20), // Espaçamento
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   // Redireciona para a tela de histórico de pedidos
@@ -217,6 +233,11 @@ class _CartScreenState extends State<CartScreen> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        // Adicionando o BottomNavigationBar
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }

@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_no_grau_app/presentation/themes/my_colors.dart'; // A cor da paleta
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'menu_screen.dart';
+import 'package:pizza_no_grau_app/presentation/screens/menu_screen.dart'; // Importando a tela de menu
+import '../widgets/bottom_navigation_bar.dart';
 
-class OrderHistoryScreen extends StatelessWidget {
+class OrderHistoryScreen extends StatefulWidget {
+  @override
+  _OrderHistoryScreenState createState() => _OrderHistoryScreenState();
+}
+
+class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
+  int _selectedIndex = 2; // Define o índice inicial como Histórico de Pedidos
+
   final List<Map<String, dynamic>> orders = [
     {
       "id": "#04",
@@ -31,6 +39,21 @@ class OrderHistoryScreen extends StatelessWidget {
     },
   ];
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    // Navegação entre as telas
+    if (index == 0) {
+      Navigator.pushReplacementNamed(context, '/menu_screen');
+    } else if (index == 1) {
+      Navigator.pushReplacementNamed(context, '/cart');
+    } else if (index == 2) {
+      // Ficar na mesma tela (Histórico de Pedidos)
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,10 +80,15 @@ class OrderHistoryScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
+                          // Ícone de pizza
                           CircleAvatar(
                             radius: 30,
-                            backgroundImage: AssetImage(
-                                'lib/assets/images/Logo.png'), // Imagem do produto
+                            backgroundColor: MyColors.redPrimary,
+                            child: Icon(
+                              FontAwesomeIcons.pizzaSlice, // Ícone de pizza
+                              size: 30, // Tamanho do ícone
+                              color: Colors.white,
+                            ),
                           ),
                           SizedBox(width: 10),
                           Column(
@@ -144,20 +172,10 @@ class OrderHistoryScreen extends StatelessWidget {
           ),
         ),
       ),
-      // Adicionando o botão para navegar para a tela do Menu
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MenuScreen()), // Navega para a tela Menu
-          );
-        },
-        backgroundColor: MyColors.redPrimary,
-        child: Icon(
-          Icons.arrow_forward,
-          color: MyColors.background,
-        ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        // Adicionando o BottomNavigationBar
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
