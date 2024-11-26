@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../themes/my_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -133,7 +134,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Text('Não tem conta?'),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Navegação para a tela de cadastro
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegisterScreen()),
+                      );
+                    },
                     child: Text(
                       'Cadastre-se',
                       style: TextStyle(color: MyColors.redPrimary),
