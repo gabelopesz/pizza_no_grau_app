@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../themes/my_colors.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -8,21 +10,21 @@ class MenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Mock data
     final pizzasSalgadas = [
-      {'name': 'Marguerita', 'image': 'lib/assets/images/pizza.jpg'},
-      {'name': '4 Queijos', 'image': 'lib/assets/images/pizza.jpg'},
-      {'name': 'Calabresa', 'image': 'lib/assets/images/pizza.jpg'},
+      {'name': 'Marguerita'},
+      {'name': '4 Queijos'},
+      {'name': 'Calabresa'},
     ];
 
     final bebidas = [
-      {'name': 'Coca-Cola', 'image': '/assets/images/pizza.jpg'},
-      {'name': 'Suco de Laranja', 'image': '/assets/images/pizza.jpg'},
-      {'name': 'Água', 'image': '/assets/images/pizza.jpg'},
+      {'name': 'Coca-Cola'},
+      {'name': 'Suco de Laranja'},
+      {'name': 'Água'},
     ];
 
     final pizzasDoces = [
-      {'name': 'Chocolate', 'image': '/assets/images/pizza.jpg'},
-      {'name': 'Brigadeiro', 'image': '/assets/images/pizza.jpg'},
-      {'name': 'Banana', 'image': '/assets/images/pizza.jpg'},
+      {'name': 'Chocolate'},
+      {'name': 'Brigadeiro'},
+      {'name': 'Banana'},
     ];
 
     return Scaffold(
@@ -46,18 +48,19 @@ class MenuScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Banner: Pizzas Salgadas
-            _buildCategoryBanner(
-                'assets/images/pizzas_salgadas.png', 'PIZZAS SALGADAS'),
-            _buildCarousel(pizzasSalgadas),
+            _buildCategoryBanner('lib/assets/images/pizzas_salgadas.png'),
+            _buildCarousel(
+                pizzasSalgadas, FontAwesomeIcons.pizzaSlice), // Pizza Icon
 
             // Banner: Bebidas
-            _buildCategoryBanner('assets/images/bebidas.png', 'BEBIDAS'),
-            _buildCarousel(bebidas),
+            _buildCategoryBanner('lib/assets/images/bebidas.png'),
+            _buildCarousel(
+                bebidas, FontAwesomeIcons.bottleWater), // Garrafa de água icone
 
             // Banner: Pizzas Doces
-            _buildCategoryBanner(
-                'assets/images/pizzas_doces.png', 'PIZZAS DOCES'),
-            _buildCarousel(pizzasDoces),
+            _buildCategoryBanner('lib/assets/images/pizzas_doces.png'),
+            _buildCarousel(pizzasDoces,
+                FontAwesomeIcons.pizzaSlice), // Doce Icon (como exemplo)
           ],
         ),
       ),
@@ -77,75 +80,66 @@ class MenuScreen extends StatelessWidget {
     );
   }
 
-  // Banner Widget
-  Widget _buildCategoryBanner(String imagePath, String title) {
+  // Banner Widget - Ajustado para garantir que a imagem não seja cortada
+  Widget _buildCategoryBanner(String imagePath) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
       child: Container(
-        height: 100,
+        width: double.infinity,
+        height: 142, // Ajustado para o tamanho do banner
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           image: DecorationImage(
             image: AssetImage(imagePath),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  blurRadius: 10,
-                  color: Colors.black,
-                  offset: Offset(2, 2),
-                ),
-              ],
-            ),
+            fit: BoxFit
+                .contain, // Garante que a imagem seja exibida completamente sem corte
           ),
         ),
       ),
     );
   }
 
-  // Carousel Widget
-  Widget _buildCarousel(List<Map<String, String>> items) {
+  // Carousel Widget - Ajustando as imagens para 136x140 e exibindo mais de uma imagem por página
+  Widget _buildCarousel(List<Map<String, String>> items, IconData icon) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: 180,
-        enableInfiniteScroll: false,
-        viewportFraction: 0.6,
-        enlargeCenterPage: true,
+        height: 170, // Ajustando a altura do carrossel
+        enableInfiniteScroll: false, // Desabilitando o scroll infinito
+        viewportFraction:
+            0.3, // Ajuste para caber mais imagens na tela (espaçamento entre as imagens)
+        enlargeCenterPage: true, // Ampliando o item central
+        autoPlay: false, // Desabilitando o auto-play
       ),
       items: items.map((item) {
         return Builder(
           builder: (BuildContext context) {
-            return Column(
-              children: [
-                // Imagem do Produto
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.asset(
-                    item['image']!,
-                    height: 120,
-                    width: 120,
-                    fit: BoxFit.cover,
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 4.0), // Reduzindo o espaçamento entre as imagens
+              child: Column(
+                children: [
+                  // Ícone redondo representando o produto
+                  CircleAvatar(
+                    radius: 50, // Ajuste o tamanho do ícone
+                    backgroundColor: MyColors.redPrimary,
+                    child: Icon(
+                      icon, // Usando o ícone de pizza ou bebida
+                      size: 50, // Ajustando o tamanho do ícone
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                // Nome do Produto
-                Text(
-                  item['name']!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 8),
+                  // Nome do Produto
+                  Text(
+                    item['name']!,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                ],
+              ),
             );
           },
         );

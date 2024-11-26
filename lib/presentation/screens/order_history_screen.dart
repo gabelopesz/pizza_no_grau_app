@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_no_grau_app/presentation/themes/my_colors.dart'; // A cor da paleta
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'order_history_screen.dart'; // Importando a tela de histórico de pedidos
+import 'menu_screen.dart';
 
 class OrderHistoryScreen extends StatelessWidget {
   final List<Map<String, dynamic>> orders = [
@@ -60,7 +60,7 @@ class OrderHistoryScreen extends StatelessWidget {
                           CircleAvatar(
                             radius: 30,
                             backgroundImage: AssetImage(
-                                'lib/assets/images/Pizza_marguerita.png'), // Imagem do produto
+                                'lib/assets/images/Logo.png'), // Imagem do produto
                           ),
                           SizedBox(width: 10),
                           Column(
@@ -142,6 +142,21 @@ class OrderHistoryScreen extends StatelessWidget {
               );
             },
           ),
+        ),
+      ),
+      // Adicionando o botão para navegar para a tela do Menu
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MenuScreen()), // Navega para a tela Menu
+          );
+        },
+        backgroundColor: MyColors.redPrimary,
+        child: Icon(
+          Icons.arrow_forward,
+          color: MyColors.background,
         ),
       ),
     );
