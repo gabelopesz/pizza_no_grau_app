@@ -60,7 +60,7 @@ class OrderHistoryScreen extends StatelessWidget {
                           CircleAvatar(
                             radius: 30,
                             backgroundImage: AssetImage(
-                                'lib/assets/images/Logo.png'), // Imagem do produto
+                                'lib/assets/images/Pizza_marguerita.png'), // Imagem do produto
                           ),
                           SizedBox(width: 10),
                           Column(
