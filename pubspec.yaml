@@ -24,8 +24,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - lib/assets/images/Logo.png
-    - lib/assets/images/Pizza_marguerita.png
+    - lib/assets/images/
 
 flutter_native_splash:
   color: "#FFFFFF"
