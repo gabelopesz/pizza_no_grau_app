@@ -8,6 +8,7 @@ class MyColors {
   static const Color grayText = Color(0xFF80869A); // Cinza (escritas)
   static const Color grayAddProduct =
       Color(0xFFD9D9D9); // Cinza (adicionar produto)
+  static const Color semiWhite = Color(0x80FFFFFF);
   static const Color yellow = Color(0xFFEBB94B); // Amarelo
   static const Color lightPink = Color(0xFFEBBA9E); // Rosa Claro
 }

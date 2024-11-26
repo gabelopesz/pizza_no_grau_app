@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_no_grau_app/presentation/themes/my_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'cart_screen.dart'; // Importe a tela de carrinho
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -189,6 +190,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ],
           ),
+        ),
+      ),
+      // Botão flutuante para redirecionar para a tela do carrinho
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Redireciona para a tela de carrinho
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CartScreen()),
+          );
+        },
+        backgroundColor: MyColors.redPrimary, // Cor do botão
+        child: Icon(
+          Icons.arrow_forward, // Ícone de seta
+          color: MyColors.background, // Cor do ícone (branco)
         ),
       ),
     );
