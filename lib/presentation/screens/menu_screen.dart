@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../data/models/product_model.dart';
 import '../../data/repositories/product_repository.dart';
 import '../widgets/bottom_navigation_bar.dart';
 import '../widgets/menu_carousel.dart';
+import 'product_detail_screen.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -15,9 +17,9 @@ class MenuScreen extends StatefulWidget {
 class MenuScreenState extends State<MenuScreen> {
   late final ProductRepository _productRepository;
 
-  late Future<List<Map<String, String>>> pizzasSalgadas;
-  late Future<List<Map<String, String>>> bebidas;
-  late Future<List<Map<String, String>>> pizzasDoces;
+  late Future<List<Product>> pizzasSalgadas;
+  late Future<List<Product>> bebidas;
+  late Future<List<Product>> pizzasDoces;
 
   int _selectedIndex = 0;
 
@@ -32,18 +34,10 @@ class MenuScreenState extends State<MenuScreen> {
     pizzasDoces = _fetchProductsByCategory('pizzasDoces');
   }
 
-  Future<List<Map<String, String>>> _fetchProductsByCategory(
-      String category) async {
+  Future<List<Product>> _fetchProductsByCategory(String category) async {
     try {
       final products = await _productRepository.fetchProducts();
-      return products
-          .where((product) => product.category == category)
-          .map((product) => {
-                'name': product.name,
-                'price': product.price,
-                'imageUrl': product.imageUrl ?? '',
-              })
-          .toList();
+      return products.where((product) => product.category == category).toList();
     } catch (e) {
       log('Error fetching products for category $category: $e');
       return [];
@@ -78,7 +72,6 @@ class MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Tipagem explícita para evitar casts
     final List<Map<String, dynamic>> categories = [
       {
         'banner': 'lib/assets/images/pizzas_salgadas.png',
@@ -123,8 +116,17 @@ class MenuScreenState extends State<MenuScreen> {
             children: [
               _buildCategoryBanner(category['banner']),
               MenuCarousel(
-                futureItems: category['futureItems'],
+                futureItems: category['futureItems'] as Future<List<Product>>,
                 icon: category['icon'],
+                onProductTap: (product) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProductDetailScreen(product: product),
+                    ),
+                  );
+                },
               ),
             ],
           );

@@ -1,11 +1,11 @@
 class Product {
   final int id;
   final String name;
-  final String price;
+  final double price;
   final String description;
   final bool isActive;
   final String? imageUrl;
-  final String? category; // Adicione esta linha.
+  final String? category;
 
   Product({
     required this.id,
