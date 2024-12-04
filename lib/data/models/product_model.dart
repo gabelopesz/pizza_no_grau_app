@@ -17,7 +17,19 @@ class Product {
     this.category,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'price': price,
+      'description': description,
+      'isActive': isActive,
+      'imageUrl': imageUrl,
+      'category': category,
+    };
+  }
+
+  static Product fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'],
       name: json['name'],

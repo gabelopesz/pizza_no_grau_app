@@ -1,12 +1,5 @@
 import 'product_model.dart';
 
-class CartItem {
-  final Product product;
-  int quantity;
-
-  CartItem({required this.product, required this.quantity});
-}
-
 class Cart {
   List<CartItem> items = [];
 
@@ -23,7 +16,6 @@ class Cart {
       (item) => item.product.id == product.id,
       orElse: () => CartItem(product: product, quantity: 0),
     );
-
     if (existingItem.quantity == 0) {
       items.add(existingItem);
     }
@@ -44,5 +36,42 @@ class Cart {
 
   void clearCart() {
     items.clear();
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'items': items.map((item) => item.toJson()).toList(),
+    };
+  }
+
+  static Cart fromJson(Map<String, dynamic> json) {
+    final cart = Cart();
+    if (json['items'] != null) {
+      cart.items = (json['items'] as List)
+          .map((item) => CartItem.fromJson(item))
+          .toList();
+    }
+    return cart;
+  }
+}
+
+class CartItem {
+  final Product product;
+  int quantity;
+
+  CartItem({required this.product, required this.quantity});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'product': product.toJson(),
+      'quantity': quantity,
+    };
+  }
+
+  static CartItem fromJson(Map<String, dynamic> json) {
+    return CartItem(
+      product: Product.fromJson(json['product']),
+      quantity: json['quantity'],
+    );
   }
 }
