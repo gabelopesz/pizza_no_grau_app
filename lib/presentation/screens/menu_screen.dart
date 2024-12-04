@@ -62,19 +62,15 @@ class MenuScreenState extends State<MenuScreen> {
     }
   }
 
-  // Ajustado para diminuir o espaçamento entre os banners e o carrossel de produtos
   Widget _buildCategoryBanner(String imagePath) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: 8.0, horizontal: 8.0), // Reduzido o padding vertical
-      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      child: SizedBox(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height *
-            0.2, // Menor altura para o banner
+        height: MediaQuery.of(context).size.height * 0.2,
         child: Image.asset(
           imagePath,
-          fit: BoxFit
-              .contain, // Garante que a imagem será visível sem ser cortada
+          fit: BoxFit.contain,
         ),
       ),
     );
@@ -82,6 +78,25 @@ class MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Tipagem explícita para evitar casts
+    final List<Map<String, dynamic>> categories = [
+      {
+        'banner': 'lib/assets/images/pizzas_salgadas.png',
+        'futureItems': pizzasSalgadas,
+        'icon': FontAwesomeIcons.pizzaSlice,
+      },
+      {
+        'banner': 'lib/assets/images/bebidas.png',
+        'futureItems': bebidas,
+        'icon': FontAwesomeIcons.bottleWater,
+      },
+      {
+        'banner': 'lib/assets/images/pizzas_doces.png',
+        'futureItems': pizzasDoces,
+        'icon': FontAwesomeIcons.pizzaSlice,
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menu'),
@@ -98,24 +113,22 @@ class MenuScreenState extends State<MenuScreen> {
           ),
         ],
       ),
-      body: ListView(
+      body: ListView.builder(
         padding: const EdgeInsets.all(8.0),
-        children: [
-          // Banner: Pizzas Salgadas
-          _buildCategoryBanner('lib/assets/images/pizzas_salgadas.png'),
-          MenuCarousel(
-              futureItems: pizzasSalgadas, icon: FontAwesomeIcons.pizzaSlice),
-
-          // Banner: Bebidas
-          _buildCategoryBanner('lib/assets/images/bebidas.png'),
-          MenuCarousel(
-              futureItems: bebidas, icon: FontAwesomeIcons.bottleWater),
-
-          // Banner: Pizzas Doces
-          _buildCategoryBanner('lib/assets/images/pizzas_doces.png'),
-          MenuCarousel(
-              futureItems: pizzasDoces, icon: FontAwesomeIcons.pizzaSlice),
-        ],
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildCategoryBanner(category['banner']),
+              MenuCarousel(
+                futureItems: category['futureItems'],
+                icon: category['icon'],
+              ),
+            ],
+          );
+        },
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _selectedIndex,

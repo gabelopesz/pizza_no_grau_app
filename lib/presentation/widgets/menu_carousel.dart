@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../themes/my_colors.dart'; // Certifique-se de ter uma paleta de cores definida
+import '../themes/my_colors.dart';
 
 class MenuCarousel extends StatelessWidget {
   final Future<List<Map<String, String>>> futureItems;
@@ -27,10 +27,9 @@ class MenuCarousel extends StatelessWidget {
           final items = snapshot.data!;
           return CarouselSlider(
             options: CarouselOptions(
-              height: 200, // Ajuste de altura para o carrossel
+              height: 200,
               enableInfiniteScroll: false,
-              viewportFraction:
-                  0.35, // Ajuste para ter mais espaçamento entre os itens
+              viewportFraction: 0.35,
               enlargeCenterPage: true,
               autoPlay: false,
             ),
@@ -45,12 +44,19 @@ class MenuCarousel extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 50,
+                          backgroundImage: item['imageUrl'] != null &&
+                                  item['imageUrl']!.isNotEmpty
+                              ? NetworkImage(item['imageUrl']!)
+                              : null,
                           backgroundColor: MyColors.redPrimary,
-                          child: Icon(
-                            icon,
-                            size: 50,
-                            color: Colors.white,
-                          ),
+                          child: item['imageUrl'] == null ||
+                                  item['imageUrl']!.isEmpty
+                              ? Icon(
+                                  icon,
+                                  size: 50,
+                                  color: Colors.white,
+                                )
+                              : null,
                         ),
                         const SizedBox(height: 8),
                         Text(
