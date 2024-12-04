@@ -6,6 +6,7 @@ import '../../data/repositories/product_repository.dart';
 import '../widgets/bottom_navigation_bar.dart';
 import '../widgets/menu_carousel.dart';
 import 'product_detail_screen.dart';
+import '../widgets/base_scaffold.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -16,19 +17,15 @@ class MenuScreen extends StatefulWidget {
 
 class MenuScreenState extends State<MenuScreen> {
   late final ProductRepository _productRepository;
-
   late Future<List<Product>> pizzasSalgadas;
   late Future<List<Product>> bebidas;
   late Future<List<Product>> pizzasDoces;
-
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-
     _productRepository = ProductRepository();
-
     pizzasSalgadas = _fetchProductsByCategory('pizzasSalgadas');
     bebidas = _fetchProductsByCategory('bebidas');
     pizzasDoces = _fetchProductsByCategory('pizzasDoces');
@@ -48,7 +45,6 @@ class MenuScreenState extends State<MenuScreen> {
     setState(() {
       _selectedIndex = index;
     });
-
     if (index == 1) {
       Navigator.pushNamed(context, '/cart');
     } else if (index == 2) {
@@ -90,22 +86,10 @@ class MenuScreenState extends State<MenuScreen> {
       },
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Menu'),
-        backgroundColor: const Color(0xFFFDF1E9),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
-          onPressed: () {},
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
-      ),
+    return BaseScaffold(
+      title: 'Menu',
+      selectedIndex: _selectedIndex,
+      onItemTapped: _onItemTapped,
       body: ListView.builder(
         padding: const EdgeInsets.all(8.0),
         itemCount: categories.length,
@@ -131,10 +115,6 @@ class MenuScreenState extends State<MenuScreen> {
             ],
           );
         },
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
       ),
     );
   }

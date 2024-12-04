@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/product_model.dart';
+import '../../domain/usecases/manage_cart.dart';
+import '../../data/repositories/cart_repository.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
@@ -9,6 +11,8 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final manageCart = ManageCart(CartRepository());
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalhes do Produto'),
@@ -69,7 +73,12 @@ class ProductDetailScreen extends StatelessWidget {
                   // Botão para Adicionar ao Carrinho
                   ElevatedButton(
                     onPressed: () {
-                      // Lógica para adicionar ao carrinho
+                      manageCart.addProductToCart(product);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content:
+                                Text('${product.name} adicionado ao carrinho')),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE9524D),
