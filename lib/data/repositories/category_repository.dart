@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../../config/api_config.dart';
 import '../models/category_model.dart';
 
 class CategoryRepository {
-  final String _baseUrl = 'https://pizza-no-grau.free.beeceptor.com/categories';
+  final String _baseUrl = '${ApiConfig.baseUrl}/categories';
 
   Future<List<Category>> fetchCategories() async {
     try {
@@ -16,7 +17,7 @@ class CategoryRepository {
       }
     } catch (e) {
       print('Erro ao processar resposta da API: $e');
-      return []; // Retorna uma lista vazia se houver erro
+      return [];
     }
   }
 }
