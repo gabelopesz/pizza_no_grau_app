@@ -20,7 +20,7 @@ class MenuScreenState extends State<MenuScreen> {
   late Future<List<Product>> pizzasSalgadas;
   late Future<List<Product>> bebidas;
   late Future<List<Product>> pizzasDoces;
-  int _selectedIndex = 0;
+  int _selectedIndex = 0; // Define o índice inicial para Home
 
   @override
   void initState() {
@@ -45,6 +45,7 @@ class MenuScreenState extends State<MenuScreen> {
     setState(() {
       _selectedIndex = index;
     });
+
     if (index == 1) {
       Navigator.pushNamed(context, '/cart');
     } else if (index == 2) {
@@ -88,8 +89,8 @@ class MenuScreenState extends State<MenuScreen> {
 
     return BaseScaffold(
       title: 'Menu',
-      selectedIndex: _selectedIndex,
-      onItemTapped: _onItemTapped,
+      selectedIndex: _selectedIndex, // Passando o selectedIndex
+      onItemTapped: _onItemTapped, // Passando a função de navegação
       body: ListView.builder(
         padding: const EdgeInsets.all(8.0),
         itemCount: categories.length,

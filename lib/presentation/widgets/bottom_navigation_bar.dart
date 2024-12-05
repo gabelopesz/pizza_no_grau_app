@@ -19,8 +19,18 @@ class CustomBottomNavigationBar extends StatelessWidget {
       selectedItemColor: MyColors.redPrimary,
       unselectedItemColor: Colors.grey,
       currentIndex: selectedIndex,
-      onTap:
-          onItemTapped, // Apenas chama a função de navegação passada do widget pai
+      onTap: (index) {
+        onItemTapped(index); // Navegação feita pela função de navegação
+        if (index == 0) {
+          Navigator.pushNamed(context, '/menu_screen');
+        } else if (index == 1) {
+          Navigator.pushNamed(context, '/cart');
+        } else if (index == 2) {
+          Navigator.pushNamed(context, '/order-history');
+        } else if (index == 3) {
+          Navigator.pushNamed(context, '/address');
+        }
+      },
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -31,13 +41,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Carrinho',
         ),
         BottomNavigationBarItem(
-          icon:
-              Icon(FontAwesomeIcons.history), // Ícone de histórico para pedidos
+          icon: Icon(FontAwesomeIcons.history),
           label: 'Pedidos',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.shoppingBag), // Ícone de sacola
-          label: 'Sacola',
+          icon: Icon(FontAwesomeIcons.addressCard),
+          label: 'Endereços', // Alterado para Endereços
         ),
       ],
     );
