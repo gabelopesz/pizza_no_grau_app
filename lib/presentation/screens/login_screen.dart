@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../themes/my_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'menu_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,13 +12,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool _obscureText = true; // Controla se a senha está oculta
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          MyColors.background, // Usando a cor de fundo definida no MyColors
+      backgroundColor: MyColors.background,
       appBar: AppBar(
         title: Text('Entrar', style: TextStyle(color: MyColors.grayText)),
         backgroundColor: Colors.transparent,
@@ -25,23 +25,19 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 24.0), // Margem das laterais
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Título
               Text(
                 'Entrar',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: MyColors.grayText, // Cor do título
+                  color: MyColors.grayText,
                 ),
               ),
-              SizedBox(
-                  height:
-                      30), // Menor distância do título para os campos de entrada
+              SizedBox(height: 30),
 
               // Campo de E-mail
               TextField(
@@ -50,8 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   labelText: 'E-mail',
                   hintText: 'user@gmail.com',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(12), // Bordas arredondadas
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   prefixIcon: Icon(Icons.email, color: MyColors.grayText),
                   contentPadding:
@@ -64,26 +59,22 @@ class _LoginScreenState extends State<LoginScreen> {
               // Campo de Senha
               TextField(
                 controller: passwordController,
-                obscureText: _obscureText, // Controle da visibilidade da senha
+                obscureText: _obscureText,
                 decoration: InputDecoration(
                   labelText: 'Senha',
                   hintText: '**********',
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(12), // Bordas arredondadas
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   prefixIcon: Icon(Icons.lock, color: MyColors.grayText),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscureText
-                          ? Icons.visibility_off
-                          : Icons.visibility, // Ícone muda conforme o estado
+                      _obscureText ? Icons.visibility_off : Icons.visibility,
                       color: MyColors.grayText,
                     ),
                     onPressed: () {
                       setState(() {
-                        _obscureText =
-                            !_obscureText; // Alterna o estado de visibilidade da senha
+                        _obscureText = !_obscureText;
                       });
                     },
                   ),
@@ -91,24 +82,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                 ),
               ),
-              SizedBox(height: 8),
-
-              // Esqueci a senha
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Esqueceu a senha?',
-                    style: TextStyle(color: MyColors.redPrimary),
-                  ),
-                ),
-              ),
               SizedBox(height: 20),
 
               // Botão Entrar
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MenuScreen()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: MyColors.redPrimary,
                   padding: EdgeInsets.symmetric(vertical: 16),
@@ -135,7 +118,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text('Não tem conta?'),
                   TextButton(
                     onPressed: () {
-                      // Navegação para a tela de cadastro
                       Navigator.push(
                         context,
                         MaterialPageRoute(
