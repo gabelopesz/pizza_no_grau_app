@@ -1,181 +1,166 @@
 import 'package:flutter/material.dart';
-import 'package:pizza_no_grau_app/presentation/themes/my_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../data/models/order_model.dart';
+import '../../data/repositories/order_repository.dart';
+import '../../data/datasources/order_api.dart';
+import '../../domain/usecases/fetch_orders.dart';
+import '../themes/my_colors.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
+  const OrderHistoryScreen({Key? key}) : super(key: key);
+
   @override
   _OrderHistoryScreenState createState() => _OrderHistoryScreenState();
 }
 
 class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
-  int _selectedIndex = 2; // Define o índice inicial como Histórico de Pedidos
+  late FetchOrders _fetchOrders;
+  late Future<List<Order>> _ordersFuture;
+  List<Order> _orders = []; // Lista de pedidos local para atualização dinâmica
+  int _selectedIndex = 2;
 
-  final List<Map<String, dynamic>> orders = [
-    {
-      "id": "#04",
-      "date": "Ago 25, 2024 - 19:35",
-      "status": "Em preparação",
-      "total": 85.50
-    },
-    {
-      "id": "#03",
-      "date": "Jun 20, 2024 - 20:30",
-      "status": "Entregue",
-      "total": 85.50
-    },
-    {
-      "id": "#02",
-      "date": "Fev 18, 2024 - 11:05",
-      "status": "Entregue",
-      "total": 70.50
-    },
-    {
-      "id": "#01",
-      "date": "Nov 11, 2023 - 21:46",
-      "status": "Entregue",
-      "total": 40.42
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    final orderApi = OrderApi();
+    final orderRepository = OrderRepository(orderApi);
+    _fetchOrders = FetchOrders(orderRepository);
+    _loadOrders(); // Carrega os pedidos ao iniciar
+  }
+
+  /// Carrega os pedidos da API
+  void _loadOrders() {
+    _ordersFuture = _fetchOrders();
+    _ordersFuture.then((orders) {
+      setState(() {
+        _orders = orders;
+      });
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao carregar pedidos: $error')),
+      );
+    });
+  }
+
+  /// Adiciona um novo pedido ao histórico
+  void _addOrder(Order newOrder) {
+    setState(() {
+      _orders.insert(0, newOrder); // Adiciona o novo pedido no início da lista
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    // Navegação entre as telas
     if (index == 0) {
       Navigator.pushReplacementNamed(context, '/menu_screen');
     } else if (index == 1) {
       Navigator.pushReplacementNamed(context, '/cart');
     } else if (index == 2) {
-      // Ficar na mesma tela (Histórico de Pedidos)
+      // Permanecer na mesma tela
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Verifica se há um novo pedido recebido como argumento
+    final newOrder = ModalRoute.of(context)?.settings.arguments as Order?;
+    if (newOrder != null) {
+      _addOrder(newOrder);
+    }
+
     return Scaffold(
       backgroundColor: MyColors.background,
       appBar: AppBar(
-        title: Text('Histórico de Pedidos',
-            style: TextStyle(color: MyColors.grayText)),
+        title: const Text('Histórico de Pedidos'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: ListView.builder(
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              var order = orders[index];
-              return Card(
-                margin: EdgeInsets.symmetric(vertical: 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          // Ícone de pizza
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundColor: MyColors.redPrimary,
-                            child: Icon(
-                              FontAwesomeIcons.pizzaSlice, // Ícone de pizza
-                              size: 30, // Tamanho do ícone
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('PEDIDO ${order["id"]}',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              SizedBox(height: 5),
-                              Text(order['date']),
-                              SizedBox(height: 5),
-                              Text(order['status'],
-                                  style: TextStyle(
-                                      color: order['status'] == "Em preparação"
-                                          ? Colors.orange
-                                          : Colors.green)),
-                            ],
-                          ),
-                          Spacer(),
-                          Text('R\$ ${order['total'].toStringAsFixed(2)}',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          // Botão Acompanhar Pedido
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Ação de acompanhar pedido
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: MyColors.redPrimary,
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              child: Text(
-                                'ACOMPANHAR PEDIDO',
-                                style: TextStyle(
-                                    color: MyColors.background,
-                                    fontWeight: FontWeight.bold),
+      body: FutureBuilder<List<Order>>(
+        future: _ordersFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              _orders.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError && _orders.isEmpty) {
+            return Center(child: Text('Erro: ${snapshot.error}'));
+          } else if (_orders.isEmpty) {
+            return const Center(child: Text('Nenhum pedido encontrado.'));
+          } else {
+            return ListView.builder(
+              itemCount: _orders.length,
+              itemBuilder: (context, index) {
+                final order = _orders[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundColor: MyColors.redPrimary,
+                              child: const Icon(
+                                FontAwesomeIcons.pizzaSlice,
+                                size: 30,
+                                color: Colors.white,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          // Botão Repetir Pedido
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Ação de repetir pedido
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: MyColors.redPrimary,
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              child: Text(
-                                'REPETIR PEDIDO',
-                                style: TextStyle(
-                                    color: MyColors.background,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('PEDIDO ${order.id}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                Text(order.date),
+                                const SizedBox(height: 5),
+                                Text(order.status,
+                                    style: TextStyle(
+                                        color: _getStatusColor(order.status))),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            const Spacer(),
+                            Text('R\$ ${order.total.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-        ),
+                );
+              },
+            );
+          }
+        },
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
-        // Adicionando o BottomNavigationBar
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case "Em preparação":
+        return Colors.orange;
+      case "A caminho":
+        return Colors.blue;
+      case "Cancelado":
+        return Colors.red;
+      case "Finalizado":
+        return Colors.green;
+      default:
+        return Colors.grey;
+    }
   }
 }
