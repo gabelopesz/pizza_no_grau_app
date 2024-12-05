@@ -6,6 +6,8 @@ import 'screens/register_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/order_history_screen.dart';
 import 'screens/menu_screen.dart';
+import 'screens/address_screen.dart';
+import 'screens/add_address_screen.dart';
 
 class AppRoutes {
   static const String menuScreen = '/menu_screen';
@@ -14,6 +16,8 @@ class AppRoutes {
   static const String homeScreen = '/home';
   static const String loginScreen = '/login';
   static const String registerScreen = '/register';
+  static const String addressScreen = '/address';
+  static const String addAddressScreen = '/add-address';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -29,6 +33,10 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => OrderHistoryScreen());
       case menuScreen:
         return MaterialPageRoute(builder: (_) => MenuScreen());
+      case addressScreen:
+        return MaterialPageRoute(builder: (_) => AddressScreen());
+      case addAddressScreen:
+        return MaterialPageRoute(builder: (_) => AddAddressScreen());
       default:
         return MaterialPageRoute(builder: (_) => WelcomePage());
     }

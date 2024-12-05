@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../data/models/product_model.dart';
 import '../../data/repositories/product_repository.dart';
-import '../widgets/bottom_navigation_bar.dart';
 import '../widgets/menu_carousel.dart';
 import 'product_detail_screen.dart';
 import '../widgets/base_scaffold.dart';

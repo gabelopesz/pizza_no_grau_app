@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pizza_no_grau_app/presentation/themes/my_colors.dart'; // A cor da paleta
+import 'package:pizza_no_grau_app/presentation/themes/my_colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pizza_no_grau_app/presentation/screens/menu_screen.dart'; // Importando a tela de menu
 import '../widgets/bottom_navigation_bar.dart';
 
 class OrderHistoryScreen extends StatefulWidget {

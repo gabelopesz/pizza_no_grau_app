@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../themes/my_colors.dart';
+import '../routes.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -20,15 +21,22 @@ class CustomBottomNavigationBar extends StatelessWidget {
       unselectedItemColor: Colors.grey,
       currentIndex: selectedIndex,
       onTap: (index) {
-        onItemTapped(index); // Navegação feita pela função de navegação
-        if (index == 0) {
-          Navigator.pushNamed(context, '/menu_screen');
-        } else if (index == 1) {
-          Navigator.pushNamed(context, '/cart');
-        } else if (index == 2) {
-          Navigator.pushNamed(context, '/order-history');
-        } else if (index == 3) {
-          Navigator.pushNamed(context, '/address');
+        onItemTapped(index);
+
+        // Rotas ao clicar em um item
+        switch (index) {
+          case 0:
+            Navigator.pushNamed(context, AppRoutes.menuScreen);
+            break;
+          case 1:
+            Navigator.pushNamed(context, AppRoutes.cartScreen);
+            break;
+          case 2:
+            Navigator.pushNamed(context, AppRoutes.orderHistoryScreen);
+            break;
+          case 3: // Endereços
+            Navigator.pushNamed(context, AppRoutes.addressScreen);
+            break;
         }
       },
       items: const [
@@ -45,8 +53,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Pedidos',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.addressCard),
-          label: 'Endereços', // Alterado para Endereços
+          icon: Icon(FontAwesomeIcons.mapMarkerAlt), // Ícone para endereços
+          label: 'Endereços',
         ),
       ],
     );
